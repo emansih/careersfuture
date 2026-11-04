@@ -16,7 +16,7 @@ export interface CreateServerOptions {
 }
 
 export function createServer(options: CreateServerOptions = {}): McpServer {
-  const server = new McpServer({ name: "careersfuture-mcp", version: "0.1.0" });
+  const server = new McpServer({ name: "careersfuture-mcp", version: "0.1.1" });
   const client = options.client ?? new McfClient();
 
   registerSearchJobsTool(server, client);
