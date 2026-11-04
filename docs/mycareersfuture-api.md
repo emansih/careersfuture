@@ -212,7 +212,7 @@ Employment types returned: Temporary (02), Contract (03), Part Time (05), Freela
 
 ## Authentication (only needed for user-specific features)
 
-You don't need any of this for search. It's documented so the next agent doesn't go looking for a token.
+You don't need any of this for search. It's documented so the next agent doesn't go looking for a token. Token storage, refresh and expiry are covered in detail in [`mycareersfuture-auth.md`](mycareersfuture-auth.md).
 
 - Sign-in is via Singpass. The API sets **HttpOnly cookies on `api.mycareersfuture.gov.sg`**. No bearer token is readable from JS, localStorage or sessionStorage.
 - The frontend only keeps flags it can read: `account-expiry` (JWT `exp`) in localStorage and a `has-myinfo-claims` cookie.
