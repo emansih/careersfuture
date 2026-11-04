@@ -4,6 +4,51 @@ A [Model Context Protocol](https://modelcontextprotocol.io) server (TypeScript, 
 
 > **Unofficial.** This wraps the public web API that the MyCareersFuture site itself uses. It was reverse-engineered (see [`docs/mycareersfuture-api.md`](docs/mycareersfuture-api.md)), is not documented or supported by the operator, and can change or break without notice. No authentication is used, and the server never calls the view-count or analytics endpoints. Please keep request volume modest.
 
+## Install
+
+Published on npm as [`careersfuture-mcp`](https://www.npmjs.com/package/careersfuture-mcp). Requires Node.js 20+. No API key or configuration needed.
+
+The easiest way is to let your MCP client run it with `npx`, which downloads and starts the latest version on demand:
+
+```bash
+npx -y careersfuture-mcp
+```
+
+Or install it globally and use the `careersfuture-mcp` command:
+
+```bash
+npm install -g careersfuture-mcp
+```
+
+### Claude Code
+
+```bash
+claude mcp add careersfuture -- npx -y careersfuture-mcp
+```
+
+On Windows (native, not WSL), wrap it with `cmd /c`:
+
+```bash
+claude mcp add careersfuture -- cmd /c npx -y careersfuture-mcp
+```
+
+### Claude Desktop and other MCP clients
+
+Add to `claude_desktop_config.json` (or your client's equivalent MCP config):
+
+```json
+{
+  "mcpServers": {
+    "careersfuture": {
+      "command": "npx",
+      "args": ["-y", "careersfuture-mcp"]
+    }
+  }
+}
+```
+
+On Windows, use `"command": "cmd"` and `"args": ["/c", "npx", "-y", "careersfuture-mcp"]`. If you installed globally, you can use `"command": "careersfuture-mcp"` with no args instead.
+
 ## What this MCP does not do
 
 - Auto-submit an application
@@ -105,7 +150,9 @@ Save the results to jobs/<today>.md as a table ranked by fit: title, company, sa
 ```
 
 
-## Install, build, run
+## Development
+
+To work on the server from a clone of this repo:
 
 ```bash
 pnpm install
@@ -127,23 +174,12 @@ pnpm inspect
 
 This runs `pnpm dlx @modelcontextprotocol/inspector node dist/index.js` and opens the Inspector UI.
 
-## Add to Claude
+## Use a local build in Claude
 
-Claude Code:
+To point a client at your local build instead of the npm package:
 
 ```bash
 claude mcp add careersfuture -- node <abs path>/dist/index.js
 ```
 
-Claude Desktop (`claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "careersfuture": {
-      "command": "node",
-      "args": ["<abs path>/dist/index.js"]
-    }
-  }
-}
-```
+For Claude Desktop, use `"command": "node"` and `"args": ["<abs path>/dist/index.js"]`.
