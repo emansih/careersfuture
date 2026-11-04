@@ -4,7 +4,14 @@ A [Model Context Protocol](https://modelcontextprotocol.io) server (TypeScript, 
 
 > **Unofficial.** This wraps the public web API that the MyCareersFuture site itself uses. It was reverse-engineered (see [`docs/mycareersfuture-api.md`](docs/mycareersfuture-api.md)), is not documented or supported by the operator, and can change or break without notice. No authentication is used, and the server never calls the view-count or analytics endpoints. Please keep request volume modest.
 
-## Tools
+## What this MCP does not do
+
+- Auto-submit an application
+- Send an email
+
+## What this MCP do
+
+### Tools
 
 All tools are read-only (`readOnlyHint`, `openWorldHint`), return JSON text plus `structuredContent` (with an `outputSchema`), and report failures as `isError` results instead of crashing.
 
@@ -61,6 +68,10 @@ No inputs. Return `{ titles: [{ title, count }] }`.
 
 ## Example usage
 
+
+Basic usage
+------
+
 Ask your MCP client something like:
 
 > Find the 5 newest permanent software engineer jobs paying at least 6000 a month, then show me the full description of the first one.
@@ -73,6 +84,26 @@ which becomes roughly:
 ```json
 { "name": "get_job", "arguments": { "uuid": "3a368bc886540633415264664f9fdcfa" } }
 ```
+
+
+Advanced usage
+------
+
+Run a cron job everyday at 6pm.
+
+> Read my resume at ~/Documents/resume.pdf. From it, work out 3–5 job titles I’m a strong fit for, my seniority, and my core skills.
+
+For each title, call search_jobs with salary: 6000, sortBy: "new_posting_date", minPostingDate set to today’s date in Singapore time, and limit: 50. Keep paging while hasMore is true. Merge the results and remove duplicates by uuid.
+
+Drop any job whose salary is hidden or whose minimum monthly salary is below 6000. For the rest, call get_job and keep only roles whose requirements match my experience and seniority.
+
+Save the results to jobs/<today>.md as a table ranked by fit: title, company, salary range, a one-line reason it fits me, and the job link. If nothing qualifies, write “No matches today.”
+
+
+```
+0 18 * * * cd ~/job-hunt && claude -p "$(cat daily-jobs-prompt.md)" --allowedTools "Read,Write,mcp__careersfuture__*"
+```
+
 
 ## Install, build, run
 
@@ -116,11 +147,3 @@ Claude Desktop (`claude_desktop_config.json`):
   }
 }
 ```
-
-## Layout
-
-- `src/index.ts` - entry point, stdio transport
-- `src/server.ts` - `createServer({ client? })` factory
-- `src/mcf/` - HTTP client (`client.ts`, injectable `fetch`, 15s timeout), response schemas and summaries (`jobs.ts`), HTML to text (`html.ts`)
-- `src/tools/`, `src/resources/` - one registration per file
-- `*.test.ts` - vitest tests (in-memory MCP client plus fake fetch)
