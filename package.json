@@ -1,0 +1,40 @@
+{
+  "name": "careersfuture-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for CareersFuture",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emansih/careersfuture.git"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "careersfuture-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "packageManager": "pnpm@11.20.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "inspect": "pnpm dlx @modelcontextprotocol/inspector node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "vitest": "5.1.0"
+  }
+}
